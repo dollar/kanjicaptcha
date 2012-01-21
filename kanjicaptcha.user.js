@@ -21,19 +21,13 @@ function randint(n){
 }
 
 // from http://userscripts.org/scripts/review/68559
-function GM_addStyle(css) {
-    var NSURI = 'http://www.w3.org/1999/xhtml';
-    var hashead = document.getElementsByTagName('head')[0];
-    var parentel = hashead || document.documentElement;
-    var newElement = document.createElementNS(NSURI,'link');
-    newElement.setAttributeNS(NSURI,'rel','stylesheet');
-    newElement.setAttributeNS(NSURI,'type','text/css');
-    newElement.setAttributeNS(NSURI,'href','data:text/css,'+encodeURIComponent(css));
-    if( hashead ) {
-        parentel.appendChild(newElement);
-    } else {
-        parentel.insertBefore(newElement,parentel.firstChild);
-    }
+GM_addStyle = typeof GM_addStyle !== "undefined" ? GM_addStyle : function(css) {
+    var head = document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+    if (!head) {return;}
+    style.type = 'text/css';
+    try {style.innerHTML = css} catch(x) {style.innerText = css}
+    head.appendChild(style);
 }
 
 function toggleClass(el, className, state ) {
@@ -92,8 +86,8 @@ form.addEventListener('submit', function(ev){
 });
 
 
-GM_addStyle("#kcquestion {margin:5px;padding:20px 5px;background:white;color:black;text-align:center;font-size:2em;}" +
+GM_addStyle("#kcquestion {margin:5px;padding:20px 5px;background:white;color:black;text-align:center;font-size:2em;width:300px;}" +
             "#kcanswer { }" +
-            ".valid {box-shadow: 0 0 2px green;}" +
-            ".invalid {box-shadow: 0 0 2px red;}" );
+            ".valid {border: 1px solid green;}" +
+            ".invalid {border: 1px solid red;}" );
 
